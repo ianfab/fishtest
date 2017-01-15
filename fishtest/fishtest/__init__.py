@@ -15,6 +15,8 @@ def main(global_config, **settings):
                         session_factory=session_factory,
                         root_factory='fishtest.models.RootFactory')
 
+  config.include('pyramid_mako')
+
   # Authentication
   with open(os.path.expanduser('~/fishtest.secret'), 'r') as f:
     secret = f.read()
@@ -67,4 +69,13 @@ def main(global_config, **settings):
   config.add_route('api_request_spsa', '/api/request_spsa')
 
   config.scan()
+
+  # IMPORTANT: use this code only to initialize a development site
+  if not rundb.userdb.get_user('user00'):
+    # add user00 as approver
+    rundb.userdb.create_user('user00', 'user00', 'user00@user00.user00')
+    rundb.userdb.add_user_group('user00', 'group:approvers')
+    #add user01 as normal user
+    rundb.userdb.create_user('user01', 'user01','user01@user01.user01')
+
   return config.make_wsgi_app()
