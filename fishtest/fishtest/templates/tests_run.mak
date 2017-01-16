@@ -21,15 +21,15 @@
     <label class="control-label">Variant:</label>
     <div class="controls">
       <select name="variant">
-        <option value="chess">Chess</option>
-        <option value="giveaway">Giveaway</option>
+        <option value="standard">Chess</option>
+        <option value="giveaway">Giveaway (not supported yet)</option>
         <option value="atomic">Atomic</option>
         <option value="crazyhouse">Crazyhouse</option>
         <option value="horde">Horde</option>
         <option value="kingofthehill">King of the Hill</option>
         <option value="losers">Losers</option>
         <option value="racingkings">Racing Kings</option>
-        <option value="threecheck">Three-check</option>
+        <option value="3check">Three-check</option>
       </select>
     </div>
   </div>

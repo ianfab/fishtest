@@ -447,7 +447,7 @@ def run_games(worker_info, password, remote, run, task_id):
           ['-srand', "%d" % struct.unpack("<L", os.urandom(struct.calcsize("<L")))] + \
           ['-resign', 'movecount=3', 'score=400', '-draw', 'movenumber=34',
            'movecount=8', 'score=20', '-concurrency', str(games_concurrency)] + pgn_cmd + \
-          ['-variant', run['args']['variant']] \
+          ['-variant', run['args']['variant']] + \
           ['-engine', 'name=stockfish', 'cmd=stockfish'] + new_options + ['_spsa_'] + \
           ['-engine', 'name=base', 'cmd=base'] + base_options + ['_spsa_'] + \
           ['-each', 'proto=uci', 'tc=%s' % (scaled_tc)] + nodestime_cmd + threads_cmd + book_cmd
