@@ -24,6 +24,7 @@ td {
 	   <input  class="form-control" style="width: 60px;" maxlength="7" id="input_commit" name="commit" type="text" placeholder="Commit" required>
 	   <input  class="form-control" style="width: 150px;" id="input_date_committed" name="date_committed" type="text" placeholder="Commited Date" required>
 	   <input  class="form-control" style="width: 200px;" id="input_link" type="text" name="link" placeholder="Fishtest Link" required>
+	   <input  class="form-control" style="width: 100px;" id="variant" type="text" name="variant" placeholder="Variant" required>
 	   <input  class="form-control" style="width: 60px;" id="input_elo" type="number" step="any" name="elo" placeholder="Elo" required>
 	   <input  class="form-control" style="width: 60px;" id="input_error" type="number" step="any" name="error" placeholder="Error" required>
 	   <button type="submit" class="btn btn-primary">Save</button>
@@ -37,6 +38,7 @@ td {
 		<td><b>Commit</b></td>
 		<td><b>Commited Date</b></td>
 		<td><b>Link</b></td>
+		<td><b>Variant</b></td>
 		<td><b>Elo</b></td>
 		<td><b>Error</b></td>
 	</tr>
@@ -53,6 +55,7 @@ td {
 		<td>${item['data']['commit']}</td>
 		<td>${item['data']['date_committed']}</td>
 		<td>${item['data']['link']}</td>
+		<td>${item['data']['variant']}</td>
 		<td>${item['data']['elo']}</td>
 		<td>${item['data']['error']}</td>
 		</tr>

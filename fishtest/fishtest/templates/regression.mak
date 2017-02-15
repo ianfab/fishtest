@@ -25,8 +25,16 @@
 
 <h4>Regression tests against latest release</h4>
 
-<div>
-<a href="/regression/data?type=fishtest" class="btn btn-default" role="button">Update Data</a>
+<div class="btn-group">
+  <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" id=
+  "btn_select_fishtest_test" type="button"><span id=
+  "btn_select_fishtest_test_caption">Select Variant</span>&nbsp;<span class=
+  "caret"></span></button>
+
+  <ul class="dropdown-menu" id="dropdown_fishtest_tests"></ul>
+  <div class="btn-group" role="group" style="margin-left: 10px;">
+    <a href="/regression/data?type=fishtest" class="btn btn-default" role="button">Update Data</a>
+  </div>
 </div>
 
 <div id="fishtest_graph" style="width: 900px; height: 600px;"></div>
@@ -43,7 +51,7 @@
       </table>
 </div>
 
-<h4 style="margin-top: 70px; margin-bottom: 20px;">Tournament regression tests carried out by Jens Lehmann</h4>
+<h4 style="margin-top: 70px; margin-bottom: 20px;">Offline regression tests</h4>
 
 <div class="btn-group">
   <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" id=
@@ -75,7 +83,7 @@
 
     <div style="margin-bottom: 70px; margin-top: 100px;">
       <h4>Link to old results</h4>
-      <a href="http://bit.ly/11QsIkd" target="_blank">http://bit.ly/11QsIkd</a>
+      <a href="https://github.com/ddugovic/Stockfish/issues/170" target="_blank">https://github.com/ddugovic/Stockfish/issues/170</a>
     </div>
   </div>
 

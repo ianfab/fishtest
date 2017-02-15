@@ -26,7 +26,7 @@ class RunDb:
     self.runs = self.db['runs']
     self.old_runs = self.db['old_runs']
 
-    self.chunk_size = 1000
+    self.chunk_size = 200
 
   def build_indices(self):
     self.runs.ensure_index([('finished', ASCENDING), ('last_updated', DESCENDING)])
@@ -58,7 +58,7 @@ class RunDb:
               spsa=None,
               username=None,
               tests_repo=None,
-              throughput=1000,
+              throughput=200,
               priority=0):
     if start_time == None:
       start_time = datetime.utcnow()
@@ -115,7 +115,7 @@ class RunDb:
       return self.runs.find_one(q)
     base_approval = get_approval(resolved_base)
     new_approval = get_approval(resolved_new)
-    allow_auto = username in ['mcostalba', 'jkiiski', 'glinscott', 'lbraesch'] 
+    allow_auto = username in ['ianfab']
     if base_approval != None and new_approval != None and allow_auto:
       new_run['approved'] = True
       new_run['approver'] = new_approval['approver']
@@ -256,10 +256,10 @@ class RunDb:
         task_id = idx
 
     # Recalculate internal priority based on task start date and throughput
-    # Formula: - second_since_epoch - played_and_allocated_tasks * 3600 * 1000 / games_throughput
+    # Formula: - second_since_epoch - played_and_allocated_tasks * 3600 * chunk_size / games_throughput
     # With default value 'throughput = 1000', this means that the priority is unchanged as long as we play at rate '1000 games / hour'.
     if (run['args']['throughput'] != None and run['args']['throughput'] != 0):
-      run['args']['internal_priority'] = - time.mktime(run['start_time'].timetuple()) - task_id * 3600 * 1000 * run['args']['threads'] / run['args']['throughput']
+      run['args']['internal_priority'] = - time.mktime(run['start_time'].timetuple()) - task_id * 3600 * self.chunk_size * run['args']['threads'] / run['args']['throughput']
     self.runs.save(run)
 
     return {'run': run, 'task_id': task_id}
@@ -353,8 +353,8 @@ class RunDb:
   def approve_run(self, run_id, approver):
     run = self.get_run(run_id)
     # Can't self approve
-    if run['args']['username'] == approver:
-      return False
+    #if run['args']['username'] == approver:
+      #return False
 
     run['approved'] = True
     run['approver'] = approver

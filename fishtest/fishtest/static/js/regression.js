@@ -1,8 +1,9 @@
 (function() {
   var current_jl_testid, fishtest_data, jl_data;
 
-  function draw_fishtest() {
+  function draw_fishtest(variant) {
     var data = !fishtest_data || fishtest_data.length < 1 ? [] : fishtest_data;
+    data = data.filter(function (el) {return el.variant == variant});
 
     data.sort(function(a, b) {
       var d1 = new Date(a.date_committed),
@@ -30,9 +31,9 @@
 
     for (var i = 0; i < data.length; i++) {
       datatable.addRow([data[i].commit,
-        parseFloat(data[i].elo),
-        parseFloat(data[i].elo) + parseFloat(data[i].error),
-        parseFloat(data[i].elo) - parseFloat(data[i].error)
+          parseFloat(data[i].elo),
+          parseFloat(data[i].elo) + parseFloat(data[i].error),
+          parseFloat(data[i].elo) - parseFloat(data[i].error)
       ]);
     }
 
@@ -54,10 +55,12 @@
       }
     };
 
+    $("#btn_select_fishtest_test_caption").html(variant);
+
     var fishtest_graph = new google.visualization.LineChart(document.getElementById('fishtest_graph'));
     fishtest_graph.draw(datatable, options_lines);
 
-    update_table_of_standings(fishtest_data, "fishtest", "#table_standings_fishtest");
+    update_table_of_standings(data, "fishtest", "#table_standings_fishtest");
 
     google.visualization.events.addListener(fishtest_graph, 'select', function(e) {
       if (fishtest_graph.getSelection()[0]) {
@@ -123,7 +126,7 @@
 
     google.visualization.events.addListener(graph, 'select', function(e) {
       if (graph.getSelection()[0]) {
-        window.open('https://github.com/official-stockfish/Stockfish/commit/' + data[graph.getSelection()[0]['row']].sha, '_blank');
+        window.open('https://github.com/niklasf/Stockfish/commit/' + data[graph.getSelection()[0]['row']].sha, '_blank');
       }
     });
 
@@ -200,8 +203,8 @@
 
   function update_table_of_standings(data, test_type, element) {
 
-    var github_commit_link = "https://github.com/official-stockfish/Stockfish/commit/";
-    var github_compare_link = "https://github.com/official-stockfish/Stockfish/compare/";
+    var github_commit_link = "https://github.com/niklasf/Stockfish/commit/";
+    var github_compare_link = "https://github.com/niklasf/Stockfish/compare/";
 
     $(element + " tbody").html("");
 
@@ -257,7 +260,16 @@
             }
           })
 
-          draw_fishtest();
+          var variants = new Array();
+          variants[0] = "chess";
+
+          for (j = 0; j < fishtest_data.length; j++) {
+            if (variants.indexOf(fishtest_data[j].variant) == -1) {
+                variants.push(fishtest_data[j].variant);
+            }
+          }
+
+          draw_fishtest(variants[0]);
           draw_jl_tests(0);
 
           if (!jl_data || jl_data.length < 1) return;
@@ -266,8 +278,16 @@
             $("#dropdown_jl_tests").append("<li><a test_id=\"" + j + "\" >" + jl_data[j].description + "</a></li>");
           }
 
+          for (j = 0; j < variants.length; j++) {
+            $("#dropdown_fishtest_tests").append("<li><a variant=\"" + variants[j] + "\" >" + variants[j] + "</a></li>");
+          }
+
           $("#dropdown_jl_tests").find('a').on('click', function() {
             draw_jl_tests($(this).attr('test_id'));
+          });
+
+          $("#dropdown_fishtest_tests").find('a').on('click', function() {
+            draw_fishtest($(this).attr('variant'));
           });
 
         })
