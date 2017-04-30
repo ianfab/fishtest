@@ -2,15 +2,32 @@
  AUTHORS (in chronological order)
 ==================================
 
-Gary Linscott
-Marco Costalba
-Lucas Braesch
-Joona Kiiski
+Gary Linscott (glinscott)
+Marco Costalba (mcostalba)
+Lucas Braesch (lucasart)
+Joona Kiiski (zamar)
 Jean-Francois Romang
 Dariusz Orzechowski
 Michel Van den Bergh
+
+# Generated with 'git shortlog -sn | cut -c8-', which sorts by commits, merged duplicates
+
+Fabian Fitcher (ianfab)
+Kamyar Kaviani
+Werner Fenchel
+Pasquale Pigazzini (ppigazzini)
+Vince Negri
+David Zar
+FieryDragonLord
+Stefano Cardanobile (Stefano80)
+fishtest
+hxim
+Jörg Oster (joergoster)
+theo77186
+
 
 Thanks to:
 Ilari Pihlajisto - cutechess, which drives all the games!
 Tord Romstad
 http://flag-sprites.com/ - For the great flag sprites
+
