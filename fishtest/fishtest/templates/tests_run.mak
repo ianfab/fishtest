@@ -120,7 +120,7 @@
   <div class="control-group stop_rule spsa">
     <label class="control-label">SPSA A:</label>
     <div class="controls">
-			<input name="spsa_A" value="${args.get('spsa', {'A': 5000})['A']}">
+      <input name="spsa_A" value="${args.get('spsa', {'A': 1000})['A']}">
     </div>
   </div>
   <div class="control-group stop_rule spsa">
