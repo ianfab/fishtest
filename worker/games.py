@@ -435,7 +435,7 @@ def run_games(worker_info, password, remote, run, task_id):
            'movecount=8', 'score=20', '-concurrency', str(games_concurrency)] + pgn_cmd + \
           ['-variant', run['args']['variant']] + \
           ['-engine', 'name=stockfish', 'cmd=%s' % (new_engine_name)] + new_options + ['_spsa_'] + \
-          ['-engine', 'name=base', 'cmd=%s' % (base_engine_name)'] + base_options + ['_spsa_'] + \
+          ['-engine', 'name=base', 'cmd=%s' % (base_engine_name)] + base_options + ['_spsa_'] + \
           ['-each', 'proto=uci', 'tc=%s' % (scaled_tc)] + nodestime_cmd + threads_cmd + book_cmd
 
     task_status = launch_cutechess(cmd, remote, result, spsa_tuning, games_to_play, tc_limit * games_to_play / min(games_to_play, games_concurrency))
