@@ -59,7 +59,7 @@ class RunDb:
               username=None,
               tests_repo=None,
               auto_purge=True,
-              throughput=400,
+              throughput=100,
               priority=0):
     if start_time == None:
       start_time = datetime.utcnow()
