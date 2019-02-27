@@ -171,7 +171,7 @@ def adjust_tc(tc, base_nps, concurrency):
   tc_limit = time_tc * factor * 3
   if increment > 0.0:
     scaled_tc += '+%.2f' % (increment * factor)
-    tc_limit += increment * factor * 200
+    tc_limit += increment * factor * 400
   if num_moves > 0:
     scaled_tc = '%d/%s' % (num_moves, scaled_tc)
     tc_limit *= 100.0 / num_moves
