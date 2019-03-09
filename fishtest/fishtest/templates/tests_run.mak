@@ -26,10 +26,13 @@
         <option value="atomic">Atomic</option>
         <option value="crazyhouse">Crazyhouse</option>
         <option value="extinction">Extinction</option>
+        <option value="5check">Five-check</option>
         <option value="grid">Grid</option>
         <option value="horde">Horde</option>
+        <option value="kinglet">Kinglet</option>
         <option value="kingofthehill">King of the Hill</option>
         <option value="losers">Losers</option>
+        <option value="pocketknight">Pocket-Knight</option>
         <option value="racingkings">Racing Kings</option>
         <option value="seirawan">Seirawan (S-Chess)</option>
         <option value="shatranj">Shatranj</option>
