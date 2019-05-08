@@ -22,27 +22,36 @@
     <div class="controls">
       <select name="variant">
         <option value="standard">Chess</option>
-        <option value="giveaway">Giveaway (Antichess)</option>
         <option value="atomic">Atomic</option>
         <option value="crazyhouse">Crazyhouse</option>
+        <option value="giveaway">Giveaway (Antichess)</option>
+        <option value="horde">Horde</option>
+        <option value="kingofthehill">King of the Hill</option>
+        <option value="racingkings">Racing Kings</option>
+        <option value="3check">Three-check</option>
+        <option disabled>-------</option>
         <option value="extinction">Extinction</option>
         <option value="5check">Five-check</option>
         <option value="grid">Grid</option>
-        <option value="horde">Horde</option>
         <option value="kinglet">Kinglet</option>
-        <option value="kingofthehill">King of the Hill</option>
         <option value="losers">Losers</option>
         <option value="pocketknight">Pocket-Knight</option>
-        <option value="racingkings">Racing Kings</option>
         <option value="seirawan">Seirawan (S-Chess)</option>
         <option value="shatranj">Shatranj</option>
-        <option value="3check">Three-check</option>
         <option value="twokings">Two Kings</option>
+        <option disabled>-------</option>
         <option value="displacedgrid">Displaced Grid</option>
         <option value="loop">Loop</option>
         <option value="slippedgrid">Slipped Grid</option>
         <option value="suicide">Suicide</option>
         <option value="twokingssymmetric">Symmetric Two Kings</option>
+        <option disabled>-------</option>
+        <option value="capablanca">Capablanca</option>
+        <option value="chancellor">Chancellor</option>
+        <option value="courier">Courier</option>
+        <option value="embassy">Embassy</option>
+        <option value="janus">Janus</option>
+        <option value="modern">Modern</option>
       </select>
     </div>
   </div>
