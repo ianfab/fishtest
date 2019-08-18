@@ -30,14 +30,24 @@
         <option value="racingkings">Racing Kings</option>
         <option value="3check">Three-check</option>
         <option disabled>-------</option>
+        <option value="aiwok">Ai-Wok</option>
+        <option value="almost">Almost</option>
+        <option value="amazon">Amazon</option>
+        <option value="asean">ASEAN</option>
+        <option value="codrus">Codrus</option>
         <option value="extinction">Extinction</option>
         <option value="5check">Five-check</option>
         <option value="grid">Grid</option>
+        <option value="hoppelpoppel">Hoppel-Poppel</option>
         <option value="kinglet">Kinglet</option>
+        <option value="losalamos">Los Alamos</option>
         <option value="losers">Losers</option>
+        <option value="makruk">Makruk</option>
+        <option value="placement">Placement</option>
         <option value="pocketknight">Pocket-Knight</option>
         <option value="seirawan">Seirawan (S-Chess)</option>
         <option value="shatranj">Shatranj</option>
+        <option value="sittuyin">Sittuyin</option>
         <option value="twokings">Two Kings</option>
         <option disabled>-------</option>
         <option value="displacedgrid">Displaced Grid</option>
@@ -50,7 +60,10 @@
         <option value="chancellor">Chancellor</option>
         <option value="courier">Courier</option>
         <option value="embassy">Embassy</option>
+        <option value="gothic">Gothic</option>
+        <option value="grand">Grand</option>
         <option value="janus">Janus</option>
+        <option value="jesonmor">Jeson Mor</option>
         <option value="modern">Modern</option>
       </select>
     </div>
