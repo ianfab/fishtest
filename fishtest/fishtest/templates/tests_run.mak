@@ -30,7 +30,7 @@
         <option value="racingkings">Racing Kings</option>
         <option value="3check">Three-check</option>
         <option disabled>-------</option>
-        <option value="aiwok">Ai-Wok</option>
+        <option value="ai-wok">Ai-Wok</option>
         <option value="almost">Almost</option>
         <option value="amazon">Amazon</option>
         <option value="asean">ASEAN</option>
