@@ -45,8 +45,7 @@
           <li><a href="https://hxim.github.io/Stockfish-Evaluation-Guide/" target="_blank">EvalGuide</a></li>
           <li class="nav-header">Repositories</li>
           <li><a href="https://github.com/ddugovic/Stockfish" target="_blank">MV-SF</a></li>
-          <li><a href="https://github.com/ianfab/Seirawan-Stockfish" target="_blank">Seirawan</a></li>
-          <li><a href="https://github.com/ianfab/Shatranj-Stockfish" target="_blank">Shatranj</a></li>
+          <li><a href="https://github.com/ianfab/Fairy-Stockfish" target="_blank">Fairy-SF</a></li>
           <li><a href="https://github.com/ianfab/fishtest" target="_blank">fishtest</a></li>
           <li><a href="https://github.com/ianfab/bookgen" target="_blank">bookgen</a></li>
           <li><a href="https://github.com/ianfab/books" target="_blank">books</a></li>
