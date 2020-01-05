@@ -40,6 +40,7 @@
         <option value="grid">Grid</option>
         <option value="hoppelpoppel">Hoppel-Poppel</option>
         <option value="kinglet">Kinglet</option>
+        <option value="knightmate">Knightmate</option>
         <option value="losalamos">Los Alamos</option>
         <option value="losers">Losers</option>
         <option value="makruk">Makruk</option>
