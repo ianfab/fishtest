@@ -44,6 +44,7 @@
         <option value="losalamos">Los Alamos</option>
         <option value="losers">Losers</option>
         <option value="makruk">Makruk</option>
+        <option value="newzealand">New Zealand</option>
         <option value="placement">Placement</option>
         <option value="pocketknight">Pocket-Knight</option>
         <option value="seirawan">Seirawan (S-Chess)</option>
