@@ -39,6 +39,7 @@
         <option value="5check">Five-check</option>
         <option value="grid">Grid</option>
         <option value="hoppelpoppel">Hoppel-Poppel</option>
+        <option value="karouk">Kar Ouk</option>
         <option value="kinglet">Kinglet</option>
         <option value="knightmate">Knightmate</option>
         <option value="losalamos">Los Alamos</option>
@@ -50,6 +51,7 @@
         <option value="seirawan">Seirawan (S-Chess)</option>
         <option value="shatranj">Shatranj</option>
         <option value="sittuyin">Sittuyin</option>
+        <option value="threekings">Three Kings</option>
         <option value="twokings">Two Kings</option>
         <option disabled>-------</option>
         <option value="displacedgrid">Displaced Grid</option>
