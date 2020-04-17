@@ -283,6 +283,19 @@ $(function() {
     if (stop_rule == 'sprt') { $('.sprt').show(); update_bounds(); }
     if (stop_rule == 'spsa') $('.spsa').show();
   };
+  var update_book = function() {
+    var variant = $('select[name=variant]').val();
+    var bookname;
+    switch (variant) {
+        case "standard":
+            bookname = "chess.epd";
+            break;
+        default:
+            bookname = variant + ".epd";
+            break;
+    }
+    $('input[name=book]').val(bookname);
+  }
 
   $('select[name=variant]').val("${args.get('variant', 'standard')}");
   $('select[name=stop_rule]').val("${'sprt' if not re_run or 'sprt' in args else 'spsa' if 'spsa' in args else 'numgames'}");
@@ -291,6 +304,7 @@ $(function() {
   update_visibility();
   $('select[name=stop_rule]').change(update_visibility);
   $('select[name=bounds]').change(update_bounds);
+  $('select[name=variant]').change(update_book);
 
   $('#fast_test').click(function() {
     $('input[name=tc]').val('10+0.1');
@@ -304,18 +318,6 @@ $(function() {
     $('input[name=base-options]').val('Hash=32 Move Overhead=100');
   });
 
-  $('#auto_book').click(function() {
-    var variant = $('select[name=variant]').val();
-    var bookname;
-    switch (variant) {
-        case "standard":
-            bookname = "chess.epd";
-            break;
-        default:
-            bookname = variant + ".epd";
-            break;
-    }
-    $('input[name=book]').val(bookname);
-  });
+  $('#auto_book').click(update_book);
 });
 </script>
