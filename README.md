@@ -1,10 +1,10 @@
 ### Overview
 
-Multi Variant Fishtest, is a distributed tasks queue to test new ideas and improvements for multi variant chess engine through self playing. The main instance for [Multi Variant Stockfish](https://github.com/ddugovic/Stockfish) is:
+Multi-Variant Fishtest, is a distributed task queue to test new ideas and improvements for chess variant engines through self playing. The main instance for [Multi-Variant Stockfish](https://github.com/ddugovic/Stockfish) and [Fairy-Stockfish](https://github.com/ianfab/Fairy-Stockfish) is:
 
-http://35.161.250.236:6543/tests
+http://variantfishtest.org/tests
 
-Developers submit patches with new ideas and improvements for the chess variant, CPU contributors install a fishtest worker on their computers to play some chess games in the background to help the developers testing the patches.
+Developers submit patches with new ideas and improvements for the engine, and CPU contributors install a fishtest worker on their computers to let the engine play games in the background in order to help developers test their patches.
 
 The fishtest worker:
 - automatically connects to the server to download: a chess opening book, the [cutechess-cli](https://github.com/ddugovic/Stockfish/wiki/How-To-build-cutechess-with-Qt-5-static) chess game manager and the chess engine sources (for the actual master and for the patch with the new idea) that will be compiled according to the type of worker platform.
@@ -18,4 +18,4 @@ The fishtest server:
 - updates and publishes the results of ongoing tests.
 - stops tests according to the selected stopping rule and publishes the final test results.
 
-To get more information please visit the [Multi Variant Fishtest Wiki](https://github.com/ianfab/fishtest/wiki)
+To get more information please visit the [Multi-Variant Fishtest Wiki](https://github.com/ianfab/fishtest/wiki)
