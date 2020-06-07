@@ -235,7 +235,7 @@ Cowardice,150,0,200,10,0.0020"""})['raw_params']}</textarea>
   <div class="control-group">
     <label class="control-label">Throughput:</label>
     <div class="controls">
-      <input name="throughput" value="${args.get('throughput', 100)}">
+      <input name="throughput" value="${args.get('throughput', 50)}">
     </div>
   </div>
   <div class="control-group">
