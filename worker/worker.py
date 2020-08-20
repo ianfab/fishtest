@@ -14,7 +14,7 @@ from optparse import OptionParser
 from games import run_games
 from updater import update
 
-WORKER_VERSION = 69
+WORKER_VERSION = 70
 ALIVE = True
 
 HTTP_TIMEOUT = 5.0
