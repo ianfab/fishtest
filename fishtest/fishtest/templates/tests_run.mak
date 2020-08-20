@@ -35,16 +35,20 @@
         <option value="amazon">Amazon</option>
         <option value="asean">ASEAN</option>
         <option value="codrus">Codrus</option>
+        <option value="dobutsu">Dobutsu</option>
+        <option value="euroshogi">Euroshogi</option>
         <option value="extinction">Extinction</option>
         <option value="5check">Five-check</option>
         <option value="grid">Grid</option>
         <option value="hoppelpoppel">Hoppel-Poppel</option>
+        <option value="judkins">Judkins</option>
         <option value="karouk">Kar Ouk</option>
         <option value="kinglet">Kinglet</option>
         <option value="knightmate">Knightmate</option>
         <option value="losalamos">Los Alamos</option>
         <option value="losers">Losers</option>
         <option value="makruk">Makruk</option>
+        <option value="minishogi">Minishogi</option>
         <option value="newzealand">New Zealand</option>
         <option value="placement">Placement</option>
         <option value="pocketknight">Pocket-Knight</option>
@@ -69,6 +73,7 @@
         <option value="janus">Janus</option>
         <option value="jesonmor">Jeson Mor</option>
         <option value="modern">Modern</option>
+        <option value="shogi">Shogi</option>
       </select>
     </div>
   </div>
