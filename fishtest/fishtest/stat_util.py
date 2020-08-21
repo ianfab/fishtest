@@ -97,7 +97,8 @@ def SPRT(R, elo0, alpha, elo1, beta, drawelo):
   }
 
   # Estimate drawelo out of sample
-  if (R['wins'] > 0 and R['losses'] > 0 and R['draws'] > 0):
+  if R['wins'] > 0 and R['losses'] > 0:
+    R = {'wins': R['wins'], 'losses': R['losses'], 'draws': max(R['draws'], 1)}  # handle variants without draws
     N = R['wins'] + R['losses'] + R['draws']
     P = {'win': float(R['wins'])/N, 'loss': float(R['losses'])/N, 'draw': float(R['draws'])/N}
     elo, drawelo = proba_to_bayeselo(P)
