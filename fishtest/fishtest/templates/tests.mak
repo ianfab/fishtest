@@ -2,7 +2,7 @@
 
 <link href="/css/flags.css" rel="stylesheet">
 
-<h2>Multi-Variant Stockfish Testing Queue</h2>
+<h2>Variant Stockfish Testing Queue</h2>
 
 %if filter:
 <h3>Filter: ${filter}</h3>

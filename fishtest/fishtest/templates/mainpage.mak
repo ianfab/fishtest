@@ -1,6 +1,6 @@
 <%inherit file="base.mak"/>
 
-<h3>Multi-Variant Stockfish Testing</h3>
+<h3>Variant Stockfish Testing</h3>
 <div class="alert alert-info alert-block">
 <h4>Permission Required</h4>
 Creating or modifying tests requires you to be logged in.  If you don't have an account, please <a href="/signup">Register</a>.
