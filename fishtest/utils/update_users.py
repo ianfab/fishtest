@@ -37,7 +37,7 @@ def process_run(run, info):
 
 def build_users(machines, info):
   for machine in machines:
-    games_per_hour = (machine['nps'] / 1200000.0) * (3600.0 / parse_tc(machine['run']['args']['tc'])) * int(machine['concurrency'])
+    games_per_hour = (machine['nps'] / 1000000.0) * (3600.0 / parse_tc(machine['run']['args']['tc'])) * int(machine['concurrency'])
     info[machine['username']]['games_per_hour'] += games_per_hour
 
   users = []

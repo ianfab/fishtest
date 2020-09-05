@@ -805,7 +805,7 @@ def tests(request):
   for machine in machines:
     machine['last_updated'] = delta_date(machine['last_updated'])
     if machine['nps'] != 0:
-      games_per_minute += (machine['nps'] / 1200000.0) * (60.0 / parse_tc(machine['run']['args']['tc'])) * int(machine['concurrency'])
+      games_per_minute += (machine['nps'] / 1000000.0) * (60.0 / parse_tc(machine['run']['args']['tc'])) * int(machine['concurrency'])
   machines.reverse()
 
   def remaining_hours(run):
