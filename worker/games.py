@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+from __future__ import print_function
 
 import datetime
 import json
@@ -24,7 +25,7 @@ try:
 except ImportError:
   from queue import Queue, Empty  # python 3.x
 
-# Global beacuse is shared across threads
+# Global because is shared across threads
 old_stats = {'wins':0, 'losses':0, 'draws':0, 'crashes':0, 'time_losses':0}
 
 IS_WINDOWS = 'windows' in platform.system().lower()
@@ -58,15 +59,32 @@ def github_api(repo):
 
 def verify_signature(engine, signature, remote, payload, concurrency):
   if concurrency > 1:
-    busy_process = subprocess.Popen([engine], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    with open(os.devnull, "wb") as dev_null:
+      busy_process = subprocess.Popen(
+        [engine],
+        stdin=subprocess.PIPE,
+        stdout=dev_null,
+        universal_newlines=True,
+        bufsize=1,
+        close_fds=not IS_WINDOWS,
+      )   
+ 
     busy_process.stdin.write('setoption name Threads value %d\n' % (concurrency-1))
     busy_process.stdin.write('go infinite\n')
+    busy_process.stdin.flush()
 
   try:
     bench_sig = ''
-    print 'Verifying signature of %s ...' % (os.path.basename(engine))
-    with open(os.devnull, 'wb') as f:
-      p = subprocess.Popen([engine, 'bench'], stderr=subprocess.PIPE, stdout=f, universal_newlines=True)
+    print('Verifying signature of {} ...'.format(os.path.basename(engine)))
+    with open(os.devnull, 'wb') as dev_null:
+      p = subprocess.Popen(
+        [engine, 'bench'],
+        stderr=subprocess.PIPE,
+        stdout=dev_null,
+        universal_newlines=True,
+        bufsize=1,
+        close_fds=not IS_WINDOWS,
+      )
     for line in iter(p.stderr.readline,''):
       if 'Nodes searched' in line:
         bench_sig = line.split(': ')[1].strip()
@@ -74,6 +92,7 @@ def verify_signature(engine, signature, remote, payload, concurrency):
         bench_nps = float(line.split(': ')[1].strip())
 
     p.wait()
+    p.stderr.close()
     if p.returncode != 0:
       raise Exception('Bench exited with non-zero code %d' % (p.returncode))
 
@@ -86,6 +105,7 @@ def verify_signature(engine, signature, remote, payload, concurrency):
   finally:
     if concurrency > 1:
       busy_process.communicate('quit\n')
+      busy_process.stdin.close()
 
   return bench_nps
 
@@ -94,7 +114,7 @@ def setup(item, testing_dir, url = FISHCOOKING_URL, branch = 'setup'):
   tree = requests.get(github_api(url) + '/git/trees/' + branch, timeout=HTTP_TIMEOUT).json()
   for blob in tree['tree']:
     if blob['path'] == item:
-      print 'Downloading %s ...' % (item)
+      print('Downloading {} ...'.format(item))
       blob_json = requests.get(blob['url'], timeout=HTTP_TIMEOUT).json()
       with open(os.path.join(testing_dir, item), 'wb+') as f:
         f.write(b64decode(blob_json['content']))
@@ -176,7 +196,7 @@ def adjust_tc(tc, base_nps, concurrency):
     scaled_tc = '%d/%s' % (num_moves, scaled_tc)
     tc_limit *= 100.0 / num_moves
 
-  print 'CPU factor : %f - tc adjusted to %s' % (factor, scaled_tc)
+  print('CPU factor : {} - tc adjusted to {}'.format(factor, scaled_tc))
   return scaled_tc, tc_limit
 
 def enqueue_output(out, queue):
@@ -194,7 +214,7 @@ def run_game(p, remote, result, spsa, spsa_tuning, tc_limit):
   t.start()
 
   end_time = datetime.datetime.now() + datetime.timedelta(seconds=tc_limit)
-  print('TC limit', tc_limit, 'End time:', end_time)
+  print('TC limit {} End time: {}'.format(tc_limit, end_time))
 
   while datetime.datetime.now() < end_time:
     try: line = q.get_nowait()
@@ -255,8 +275,9 @@ def run_game(p, remote, result, spsa, spsa_tuning, tc_limit):
           kill_process(p)
           break
 
-  if datetime.datetime.now() >= end_time:
-    print(datetime.datetime.now(), 'is past end time', end_time)
+  now = datetime.datetime.now()
+  if now >= end_time:
+    print('{} is past end time {}'.format(now, end_time))
     kill_process(p)
 
   return { 'task_alive': True }
@@ -283,7 +304,7 @@ def launch_cutechess(cmd, remote, result, spsa_tuning, games_to_play, tc_limit):
   idx = cmd.index('_spsa_')
   cmd = cmd[:idx] + ['option.%s=%d'%(x['name'], round(x['value'])) for x in spsa['b_params']] + cmd[idx+1:]
 
-  print cmd
+  print(cmd)
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True, bufsize=1, close_fds=not IS_WINDOWS)
 
   try:
@@ -408,7 +429,7 @@ def run_games(worker_info, password, remote, run, task_id):
   else:
     book_cmd = ['book=%s' % (book), 'bookdepth=%s' % (book_depth)]
 
-  print 'Running %s vs %s' % (run['args']['new_tag'], run['args']['base_tag'])
+  print('Running {} vs {}'.format(run['args']['new_tag'], run['args']['base_tag']))
 
   if spsa_tuning:
     games_to_play = games_concurrency * 2
@@ -429,14 +450,14 @@ def run_games(worker_info, password, remote, run, task_id):
 
   while games_remaining > 0:
     # Run cutechess-cli binary
-    cmd = [ cutechess, '-repeat', '-rounds', str(games_to_play), '-tournament', 'gauntlet'] + pgnout + \
-          ['-srand', "%d" % struct.unpack("<L", os.urandom(struct.calcsize("<L")))] + \
+    cmd = [ cutechess, '-repeat', '-rounds', str(int(games_to_play)), '-tournament', 'gauntlet'] + pgnout + \
+          ['-srand', "{}".format(struct.unpack("<L", os.urandom(struct.calcsize("<L")))[0])] + \
           ['-resign', 'movecount=8', 'score=800', '-draw', 'movenumber=34',
-           'movecount=8', 'score=20', '-concurrency', str(games_concurrency)] + pgn_cmd + \
+           'movecount=8', 'score=20', '-concurrency', str(int(games_concurrency))] + pgn_cmd + \
           ['-variant', run['args']['variant']] + \
-          ['-engine', 'name=stockfish', 'cmd=%s' % (new_engine_name)] + new_options + ['_spsa_'] + \
-          ['-engine', 'name=base', 'cmd=%s' % (base_engine_name)] + base_options + ['_spsa_'] + \
-          ['-each', 'proto=uci', 'tc=%s' % (scaled_tc)] + nodestime_cmd + threads_cmd + book_cmd
+          ['-engine', 'name=stockfish', 'cmd={}'.format(new_engine_name)] + new_options + ['_spsa_'] + \
+          ['-engine', 'name=base', 'cmd={}'.format(base_engine_name)] + base_options + ['_spsa_'] + \
+          ['-each', 'proto=uci', 'tc={}'.format(scaled_tc)] + nodestime_cmd + threads_cmd + book_cmd
 
     task_status = launch_cutechess(cmd, remote, result, spsa_tuning, games_to_play, tc_limit * games_to_play / min(games_to_play, games_concurrency))
     if not task_status.get('task_alive', False):
