@@ -1,4 +1,6 @@
 #!/usr/bin/python
+from __future__ import print_function
+
 import json
 import multiprocessing
 import os
@@ -9,19 +11,24 @@ import requests
 import time
 import traceback
 import uuid
-from ConfigParser import SafeConfigParser
 from optparse import OptionParser
 from games import run_games
 from updater import update
 
-WORKER_VERSION = 70
+try:
+  from ConfigParser import SafeConfigParser
+  config = SafeConfigParser()
+except ImportError:
+  from configparser import ConfigParser  # Python3
+  config = ConfigParser()
+
+WORKER_VERSION = 71
 ALIVE = True
 
 HTTP_TIMEOUT = 5.0
 
 def setup_config_file(config_file):
   ''' Config file setup, adds defaults if not existing '''
-  config = SafeConfigParser()
   config.read(config_file)
 
   defaults = [('login', 'username', ''), ('login', 'password', ''),
@@ -57,12 +64,12 @@ def worker(worker_info, password, remote):
     req = json.loads(req.text)
 
     if 'version' not in req:
-      print 'Incorrect username/password'
+      print('Incorrect username/password')
       time.sleep(5)
       sys.exit(1)
 
     if req['version'] > WORKER_VERSION:
-      print 'Updating worker version to %d' % (req['version'])
+      print('Updating worker version to {}'.format(req['version']))
       update()
 
     req = requests.post(remote + '/api/request_task', data=json.dumps(payload), headers={'Content-type': 'application/json'}, timeout=HTTP_TIMEOUT)
@@ -78,7 +85,7 @@ def worker(worker_info, password, remote):
 
   # No tasks ready for us yet, just wait...
   if 'task_waiting' in req:
-    print 'No tasks available at this time, waiting...'
+    print('No tasks available at this time, waiting...')
     time.sleep(10)
     return
 
@@ -137,7 +144,7 @@ def main():
     config.write(f)
 
   remote = 'http://%s:%s' % (options.host, options.port)
-  print 'Worker version %d connecting to %s' % (WORKER_VERSION, remote)
+  print('Worker version {} connecting to {}'.format(WORKER_VERSION, remote))
 
   try:
     cpu_count = min(int(options.concurrency), multiprocessing.cpu_count() - 1)
@@ -155,6 +162,12 @@ def main():
     'concurrency': cpu_count,
     'username': args[0],
     'version': WORKER_VERSION,
+    'version': '{}:{}.{}.{}'.format(
+            WORKER_VERSION,
+            sys.version_info.major,
+            sys.version_info.minor,
+            sys.version_info.micro,
+        ),
     'unique_key': str(uuid.uuid4()),
   }
 
