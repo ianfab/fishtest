@@ -44,13 +44,8 @@ HTTP_TIMEOUT = 5.0
 
 FISHCOOKING_URL = 'https://github.com/ianfab/FishCooking'
 BOOKS_URL = 'https://github.com/ianfab/books'
-ARCH = 'ARCH=x86-64-modern' if is_64bit() else 'ARCH=x86-32'
-EXE_SUFFIX = ''
-MAKE_CMD = 'make COMP=gcc ' + ARCH
-
-if IS_WINDOWS:
-  EXE_SUFFIX = '.exe'
-  MAKE_CMD = 'make COMP=mingw ' + ARCH
+EXE_SUFFIX = '.exe' if IS_WINDOWS else ''
+MAKE_CMD = 'make COMP=mingw ' if IS_WINDOWS else 'make COMP=gcc '
 
 def github_api(repo):
   """ Convert from https://github.com/<user>/<repo>
@@ -122,6 +117,92 @@ def setup(item, testing_dir, url = FISHCOOKING_URL, branch = 'setup'):
   else:
     raise Exception('Item %s not found' % (item))
 
+def gcc_props():
+  """Parse the output of g++ -Q -march=native --help=target and extract the available properties"""
+  p = subprocess.Popen(['g++', '-Q', '-march=native', '--help=target'], stdout=subprocess.PIPE, universal_newlines=True, bufsize=1, close_fds=not IS_WINDOWS)
+
+
+  flags=[]
+  arch="None"
+  for line in iter(p.stdout.readline,''):
+    if '[enabled]' in line:
+      flags.append(line.split()[0])
+    if '-march' in line and len(line.split()) == 2:
+      arch = line.split()[1]
+
+  p.wait()
+  p.stdout.close()
+
+  if p.returncode != 0:
+    raise Exception('g++ target query failed with return code %d' % (p.returncode))
+
+  return {'flags' : flags, 'arch' : arch}
+
+
+def make_targets():
+  """Parse the output of make help and extract the available targets"""
+  p = subprocess.Popen(['make', 'help'], stdout=subprocess.PIPE, universal_newlines=True, bufsize=1, close_fds=not IS_WINDOWS)
+
+  targets=[]
+  read_targets = False
+
+  for line in iter(p.stdout.readline,''):
+    if 'Supported compilers:' in line:
+       read_targets = False
+    if read_targets and len(line.split())>1:
+       targets.append(line.split()[0])
+    if 'Supported archs:' in line:
+       read_targets = True
+
+  p.wait()
+  p.stdout.close()
+
+  if p.returncode != 0:
+    raise Exception('make help failed with return code {}'.format(p.returncode))
+
+  return targets
+
+
+def find_arch_string():
+  """Find the best ARCH=... string based on the cpu/g++ capabilities and Makefile targets"""
+
+  targets = make_targets()
+
+  props = gcc_props()
+
+  if is_64bit():
+     if '-mavx512vnni' in props['flags'] and '-mavx512dq' in props['flags'] and \
+        '-mavx512f' in props['flags'] and '-mavx512bw' in props['flags'] and \
+        '-mavx512vl' in props['flags'] and 'x86-64-vnni256' in targets:
+        res='x86-64-vnni256'
+     elif '-mbmi2' in props['flags'] and 'x86-64-bmi2' in targets \
+          and not props['arch'] in ['znver1', 'znver2']:
+        res='x86-64-bmi2'
+     elif '-mavx2' in props['flags'] and 'x86-64-avx2' in targets:
+        res='x86-64-avx2'
+     elif '-mpopcnt' in props['flags'] and '-msse4.1' in props['flags'] and 'x86-64-modern' in targets:
+        res='x86-64-modern'
+     elif '-mssse3' in props['flags'] and 'x86-64-ssse3' in targets:
+        res='x86-64-ssse3'
+     elif '-mpopcnt' in props['flags'] and '-msse3' in props['flags'] and 'x86-64-sse3-popcnt' in targets:
+        res='x86-64-sse3-popcnt'
+     else:
+        res='x86-64'
+  else:
+     if '-mpopcnt' in props['flags'] and '-msse4.1' in props['flags'] and 'x86-32-sse41-popcnt' in targets:
+        res='x86-32-sse41-popcnt'
+     elif '-msse2' in props['flags'] and 'x86-32-sse2' in targets:
+        res='x86-32-sse2'
+     else:
+        res='x86-32'
+
+  print('Available Makefile architecture targets: ', targets)
+  print('Available g++/cpu properties: ', props)
+  print('Determined the best architecture to be: ', res)
+
+  return 'ARCH=' + res
+
+
 def setup_engine(destination, worker_dir, sha, repo_url, concurrency):
   if os.path.exists(destination): os.remove(destination)
   """Download and build sources in a temporary directory then move exe to destination"""
@@ -139,17 +220,13 @@ def setup_engine(destination, worker_dir, sha, repo_url, concurrency):
       src_dir = name
   os.chdir(src_dir)
 
-  custom_make = os.path.join(worker_dir, 'custom_make.txt')
-  if os.path.exists(custom_make):
-    with open(custom_make, 'r') as m:
-      make_cmd = m.read().strip()
-    subprocess.check_call(make_cmd, shell=True)
-  else:
-    subprocess.check_call(MAKE_CMD + ' -j %s' % (concurrency) + ' profile-build', shell=True)
-    try: # try/pass needed for backwards compatibility with older stockfish, where 'make strip' fails under mingw.
-      subprocess.check_call(MAKE_CMD + ' -j %s' % (concurrency) + ' strip', shell=True)
-    except:
-      pass
+  arch_string = find_arch_string()
+
+  subprocess.check_call(MAKE_CMD + arch_string + ' -j {}'.format(concurrency) + ' profile-build', shell=True)
+  try: # try/pass needed for backwards compatibility with older stockfish, where 'make strip' fails under mingw.
+    subprocess.check_call(MAKE_CMD + arch_string + ' -j {}'.format(concurrency) + ' strip', shell=True)
+  except:
+    pass
 
   shutil.move('stockfish'+ EXE_SUFFIX, destination)
   os.chdir(worker_dir)
