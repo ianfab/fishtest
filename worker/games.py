@@ -336,16 +336,17 @@ def run_game(p, remote, result, spsa, spsa_tuning, tc_limit):
       for _ in range(5):
         try:
           req = requests.post(remote + '/api/update_task', data=json.dumps(result), headers={'Content-type': 'application/json'}, timeout=HTTP_TIMEOUT).json()
-
+        except Exception as e:
+          sys.stderr.write('Exception from calling update_task:\n')
+          print(e)
+        else:
           if not req['task_alive']:
             # This task is no longer necessary
             print('Server told us task is no longer needed')
             return req
           update_succeeded = True
           break
-        except Exception as e:
-          sys.stderr.write('Exception from calling update_task:\n')
-          print(e)
+        time.sleep(HTTP_TIMEOUT)
 
       if not update_succeeded:
         print('Too many failed update attempts')
