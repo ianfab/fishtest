@@ -219,7 +219,7 @@ def run_game(p, remote, result, spsa, spsa_tuning, tc_limit):
   while datetime.datetime.now() < end_time:
     try: line = q.get_nowait()
     except Empty:
-      if p.poll() != None:
+      if p.poll() is not None:
         break
       time.sleep(1)
       continue
@@ -230,8 +230,6 @@ def run_game(p, remote, result, spsa, spsa_tuning, tc_limit):
     # Have we reached the end of the match?  Then just exit
     if 'Finished match' in line:
       print('Finished match cleanly')
-      kill_process(p)
-      break
 
     # Parse line like this:
     # Finished game 1 (stockfish vs base): 0-1 {White disconnects}
@@ -256,29 +254,28 @@ def run_game(p, remote, result, spsa, spsa_tuning, tc_limit):
         spsa['losses'] = wld[1]
         spsa['draws'] = wld[2]
 
-      try:
-        req = requests.post(remote + '/api/update_task', data=json.dumps(result), headers={'Content-type': 'application/json'}, timeout=HTTP_TIMEOUT).json()
-        failed_updates = 0
+      update_succeeded = False
+      for _ in range(5):
+        try:
+          req = requests.post(remote + '/api/update_task', data=json.dumps(result), headers={'Content-type': 'application/json'}, timeout=HTTP_TIMEOUT).json()
 
-        if not req['task_alive']:
-          # This task is no longer neccesary
-          print('Server told us task is no longer needed')
-          kill_process(p)
-          return req
-
-      except:
-        sys.stderr.write('Exception from calling update_task:\n')
-        traceback.print_exc(file=sys.stderr)
-        failed_updates += 1
-        if failed_updates > 5:
-          print('Too many failed update attempts')
-          kill_process(p)
+          if not req['task_alive']:
+            # This task is no longer necessary
+            print('Server told us task is no longer needed')
+            return req
+          update_succeeded = True
           break
+        except Exception as e:
+          sys.stderr.write('Exception from calling update_task:\n')
+          print(e)
+
+      if not update_succeeded:
+        print('Too many failed update attempts')
+        break
 
   now = datetime.datetime.now()
   if now >= end_time:
     print('{} is past end time {}'.format(now, end_time))
-    kill_process(p)
 
   return { 'task_alive': True }
 
@@ -300,24 +297,22 @@ def launch_cutechess(cmd, remote, result, spsa_tuning, games_to_play, tc_limit):
 
   # Run cutechess-cli binary
   idx = cmd.index('_spsa_')
-  cmd = cmd[:idx] + ['option.%s=%d'%(x['name'], round(x['value'])) for x in spsa['w_params']] + cmd[idx+1:]
+  cmd = cmd[:idx] + ['option.{}={}'.format(x['name'], round(x['value'])) for x in spsa['w_params']] + cmd[idx+1:]
   idx = cmd.index('_spsa_')
-  cmd = cmd[:idx] + ['option.%s=%d'%(x['name'], round(x['value'])) for x in spsa['b_params']] + cmd[idx+1:]
+  cmd = cmd[:idx] + ['option.{}={}'.format(x['name'], round(x['value'])) for x in spsa['b_params']] + cmd[idx+1:]
 
   print(cmd)
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True, bufsize=1, close_fds=not IS_WINDOWS)
 
+  task_state = { 'task_alive': False }
   try:
-    return run_game(p, remote, result, spsa, spsa_tuning, tc_limit)
-  except:
+    task_state = run_game(p, remote, result, spsa, spsa_tuning, tc_limit)
+  except Exception as e:
+    print('Exception running games')
     traceback.print_exc(file=sys.stderr)
-    try:
-      print('Exception running games')
-      kill_process(p)
-    except:
-      pass
-
-  return { 'task_alive': False }
+  finally:
+    kill_process(p)
+  return task_state
 
 def run_games(worker_info, password, remote, run, task_id):
   task = run['tasks'][task_id]
