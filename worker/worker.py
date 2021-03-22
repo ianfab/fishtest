@@ -32,7 +32,7 @@ def setup_config_file(config_file):
   config.read(config_file)
 
   defaults = [('login', 'username', ''), ('login', 'password', ''),
-              ('parameters', 'host', '35.161.250.236'),
+              ('parameters', 'host', 'www.variantfishtest.org'),
               ('parameters', 'port', '6543'),
               ('parameters', 'concurrency', '3')]
 
@@ -116,7 +116,8 @@ def main():
   signal.signal(signal.SIGINT, on_sigint)
   signal.signal(signal.SIGTERM, on_sigint)
 
-  config_file = 'fishtest.cfg'
+  worker_dir = os.path.dirname(os.path.realpath(__file__))
+  config_file = os.path.join(worker_dir, "fishtest.cfg")
   config = setup_config_file(config_file)
   parser = OptionParser()
   parser.add_option('-n', '--host', dest='host', default=config.get('parameters', 'host'))
