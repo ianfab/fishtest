@@ -238,6 +238,8 @@ def kill_process(p):
     subprocess.call(['taskkill', '/F', '/T', '/PID', str(p.pid)])
   else:
     p.kill()
+  p.wait()
+  p.stdout.close()
 
 def adjust_tc(tc, base_nps, concurrency):
   factor = 1000000.0 / base_nps
@@ -277,9 +279,8 @@ def adjust_tc(tc, base_nps, concurrency):
   return scaled_tc, tc_limit
 
 def enqueue_output(out, queue):
-  for line in iter(out.readline, b''):
+  for line in iter(out.readline, ''):
     queue.put(line)
-  out.close()
 
 def run_game(p, remote, result, spsa, spsa_tuning, tc_limit):
   global old_stats
