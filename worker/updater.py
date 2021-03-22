@@ -33,9 +33,10 @@ def update():
   zip_file.extractall(update_dir)
   zip_file.close()
   prefix = os.path.commonprefix([n.filename for n in zip_file.infolist()])
-  fishtest_src = os.path.join(update_dir, prefix)
-  fishtest_dir = os.path.dirname(worker_dir) # fishtest_dir is assumed to be parent of worker_dir
-  copy_tree(fishtest_src, fishtest_dir)
+  worker_src = os.path.join(update_dir, os.path.join(prefix, 'worker'))
+  copy_tree(worker_src, worker_dir)
+  # the worker runs games from the "testing" folder so change the folder
+  os.chdir(worker_dir) 
   shutil.rmtree(update_dir)
   testing_dir = os.path.join(worker_dir, 'testing')
   if os.path.exists(testing_dir):
