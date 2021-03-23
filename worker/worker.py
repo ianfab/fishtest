@@ -81,7 +81,7 @@ def worker(worker_info, password, remote):
     return
 
   if 'error' in req:
-    raise Exception('Error from remote: %s' % (req['error']))
+    raise Exception('Error from remote: {}'.format(req['error']))
 
   # No tasks ready for us yet, just wait...
   if 'task_waiting' in req:
@@ -132,7 +132,7 @@ def main():
     if len(username) != 0 and len(password) != 0:
       args.extend([ username, password ])
     else:
-      sys.stderr.write('%s [username] [password]\n' % (sys.argv[0]))
+      sys.stderr.write('{} [username] [password]\n'.format(sys.argv[0]))
       sys.exit(1)
 
   # Write command line parameters to the config file
@@ -144,7 +144,7 @@ def main():
   with open(config_file, 'w') as f:
     config.write(f)
 
-  remote = 'http://%s:%s' % (options.host, options.port)
+  remote = 'http://{}:{}'.format(options.host, options.port)
   print('Worker version {} connecting to {}'.format(WORKER_VERSION, remote))
 
   try:
@@ -162,7 +162,6 @@ def main():
     'architecture': platform.architecture(),
     'concurrency': cpu_count,
     'username': args[0],
-    'version': WORKER_VERSION,
     'version': '{}:{}.{}.{}'.format(
             WORKER_VERSION,
             sys.version_info.major,

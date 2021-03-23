@@ -14,7 +14,7 @@ def restart(worker_dir):
   args = sys.argv[:]
   args.insert(0, sys.executable)
   if sys.platform == 'win32':
-    args = ['"%s"' % arg for arg in args]
+    args = ['"{}"'.format(arg) for arg in args]
 
   os.chdir(worker_dir)
   os.execv(sys.executable, args) # This does not return !

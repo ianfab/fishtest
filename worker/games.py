@@ -13,10 +13,8 @@ import sys
 import tempfile
 import threading
 import time
-import traceback
 import platform
 import struct
-import zipfile
 from base64 import b64decode
 from zipfile import ZipFile
 
@@ -62,9 +60,9 @@ def verify_signature(engine, signature, remote, payload, concurrency):
         universal_newlines=True,
         bufsize=1,
         close_fds=not IS_WINDOWS,
-      )   
+      ) 
  
-    busy_process.stdin.write('setoption name Threads value %d\n' % (concurrency-1))
+    busy_process.stdin.write('setoption name Threads value {}\n'.format(concurrency-1))
     busy_process.stdin.write('go infinite\n')
     busy_process.stdin.flush()
 
@@ -89,10 +87,10 @@ def verify_signature(engine, signature, remote, payload, concurrency):
     p.wait()
     p.stderr.close()
     if p.returncode != 0:
-      raise Exception('Bench exited with non-zero code %d' % (p.returncode))
+      raise Exception('Bench exited with non-zero code {}'.format(p.returncode))
 
     if int(bench_sig) != int(signature):
-      message = 'Wrong bench in %s Expected: %s Got: %s' % (os.path.basename(engine), signature, bench_sig)
+      message = 'Wrong bench in {} Expected: {} Got: {}'.format(os.path.basename(engine), signature, bench_sig)
       payload['message'] = message
       requests.post(remote + '/api/stop_run', data=json.dumps(payload), headers={'Content-type': 'application/json'}, timeout=HTTP_TIMEOUT)
       raise Exception(message)
@@ -115,7 +113,7 @@ def setup(item, testing_dir, url = FISHCOOKING_URL, branch = 'setup'):
         f.write(b64decode(blob_json['content']))
       break
   else:
-    raise Exception('Item %s not found' % (item))
+    raise Exception('Item {} not found'.format(item))
 
 def gcc_props():
   """Parse the output of g++ -Q -march=native --help=target and extract the available properties"""
@@ -134,7 +132,7 @@ def gcc_props():
   p.stdout.close()
 
   if p.returncode != 0:
-    raise Exception('g++ target query failed with return code %d' % (p.returncode))
+    raise Exception('g++ target query failed with return code {}'.format(p.returncode))
 
   return {'flags' : flags, 'arch' : arch}
 
@@ -266,13 +264,13 @@ def adjust_tc(tc, base_nps, concurrency):
     time_tc = float(chunks[0])
 
   # Rebuild scaled_tc now
-  scaled_tc = '%.2f' % (time_tc * factor)
+  scaled_tc = '{:.3f}'.format(time_tc * factor)
   tc_limit = time_tc * factor * 3
   if increment > 0.0:
-    scaled_tc += '+%.2f' % (increment * factor)
+    scaled_tc += '+{:.3f}'.format(increment * factor)
     tc_limit += increment * factor * 400
   if num_moves > 0:
-    scaled_tc = '%d/%s' % (num_moves, scaled_tc)
+    scaled_tc = '{}/{}'.format(num_moves, scaled_tc)
     tc_limit *= 100.0 / num_moves
 
   print('CPU factor : {} - tc adjusted to {}'.format(factor, scaled_tc))
@@ -284,7 +282,6 @@ def enqueue_output(out, queue):
 
 def run_game(p, remote, result, spsa, spsa_tuning, tc_limit):
   global old_stats
-  failed_updates = 0
 
   q = Queue()
   t = threading.Thread(target=enqueue_output, args=(p.stdout, q))
@@ -388,7 +385,7 @@ def launch_cutechess(cmd, remote, result, spsa_tuning, games_to_play, tc_limit):
     task_state = run_game(p, remote, result, spsa, spsa_tuning, tc_limit)
   except Exception as e:
     print('Exception running games')
-    traceback.print_exc(file=sys.stderr)
+    print(e)
   finally:
     kill_process(p)
   return task_state
@@ -430,7 +427,7 @@ def run_games(worker_info, password, remote, run, task_id):
     param = chunks[0]
     for c in chunks[1:]:
       val = c.split()
-      results.append('option.%s=%s' % (param, val[0]))
+      results.append('option.{}={}'.format(param, val[0]))
       param = ' '.join(val[1:])
     return results
  
@@ -474,8 +471,10 @@ def run_games(worker_info, password, remote, run, task_id):
 
   # Download cutechess if not already existing
   if not os.path.exists(cutechess):
-    if len(EXE_SUFFIX) > 0: zipball = 'cutechess-cli-win.zip'
-    else: zipball = 'cutechess-cli-linux-%s.zip' % (platform.architecture()[0])
+    if len(EXE_SUFFIX) > 0:
+      zipball = 'cutechess-cli-win.zip'
+    else:
+      zipball = 'cutechess-cli-linux-{}.zip'.format(platform.architecture()[0])
     setup(zipball, testing_dir)
     zip_file = ZipFile(zipball)
     zip_file.extractall()
@@ -499,9 +498,9 @@ def run_games(worker_info, password, remote, run, task_id):
   book_cmd = []
   if book.endswith('.pgn') or book.endswith('.epd'):
     plies = 2 * int(book_depth)
-    pgn_cmd = ['-openings', 'file=%s' % (book), 'format=%s' % (book[-3:]), 'order=random', 'plies=%d' % (plies)]
+    pgn_cmd = ['-openings', 'file={}'.format(book), 'format={}'.format(book[-3:]), 'order=random', 'plies={}'.format(plies)]
   else:
-    book_cmd = ['book=%s' % (book), 'bookdepth=%s' % (book_depth)]
+    book_cmd = ['book={}'.format(book), 'bookdepth={}'.format(book_depth)]
 
   print('Running {} vs {}'.format(run['args']['new_tag'], run['args']['base_tag']))
 
@@ -514,9 +513,9 @@ def run_games(worker_info, password, remote, run, task_id):
 
   threads_cmd=[]
   if not any("Threads" in s for s in new_options + base_options):
-    threads_cmd = ['option.Threads=%d' % (threads)]
+    threads_cmd = ['option.Threads={}'.format(threads)]
 
-  # If nodestime is being used, give engines extra grace time to 
+  # If nodestime is being used, give engines extra grace time to
   # make time losses virtually impossible
   nodestime_cmd=[]
   if any ("nodestime" in s for s in new_options + base_options):
