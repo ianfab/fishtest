@@ -22,7 +22,7 @@ except ImportError:
   from configparser import ConfigParser  # Python3
   config = ConfigParser()
 
-WORKER_VERSION = 71
+WORKER_VERSION = 72
 ALIVE = True
 
 HTTP_TIMEOUT = 5.0
