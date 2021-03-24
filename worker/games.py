@@ -533,7 +533,7 @@ def run_games(worker_info, password, remote, run, task_id):
 
   while games_remaining > 0:
     # Run cutechess-cli binary
-    cmd = [ cutechess, '-repeat', '-rounds', str(int(games_to_play)), '-tournament', 'gauntlet'] + pgnout + \
+    cmd = [ cutechess, '-repeat', '-games', str(int(games_to_play)), '-tournament', 'gauntlet'] + pgnout + \
           ['-srand', "{}".format(struct.unpack("<L", os.urandom(struct.calcsize("<L")))[0])] + \
           ['-resign', 'movecount=8', 'score=800', '-draw', 'movenumber=34',
            'movecount=8', 'score=20', '-concurrency', str(int(games_concurrency))] + pgn_cmd + \
