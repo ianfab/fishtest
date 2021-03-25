@@ -383,9 +383,9 @@ def launch_cutechess(cmd, remote, result, spsa_tuning, games_to_play, tc_limit):
 
   # Run cutechess-cli binary
   idx = cmd.index('_spsa_')
-  cmd = cmd[:idx] + ['option.{}={}'.format(x['name'], round(x['value'])) for x in spsa['w_params']] + cmd[idx+1:]
+  cmd = cmd[:idx] + ['option.{}={}'.format(x['name'], int(round(x['value']))) for x in spsa['w_params']] + cmd[idx+1:]
   idx = cmd.index('_spsa_')
-  cmd = cmd[:idx] + ['option.{}={}'.format(x['name'], round(x['value'])) for x in spsa['b_params']] + cmd[idx+1:]
+  cmd = cmd[:idx] + ['option.{}={}'.format(x['name'], int(round(x['value']))) for x in spsa['b_params']] + cmd[idx+1:]
 
   print(cmd)
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True, bufsize=1, close_fds=not IS_WINDOWS)
