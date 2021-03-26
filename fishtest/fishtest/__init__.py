@@ -6,7 +6,7 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
 from pyramid.events import NewRequest
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
-from rundb import RunDb
+from fishtest.rundb import RunDb
 
 
 def main(global_config, **settings):

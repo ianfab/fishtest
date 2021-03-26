@@ -11,7 +11,7 @@ import numpy
 import requests
 import scipy
 import scipy.stats
-import stat_util
+import fishtest.stat_util
 from pyramid.httpexceptions import HTTPBadRequest, HTTPFound
 from pyramid.security import authenticated_userid, forget, has_permission, remember
 from pyramid.view import forbidden_view_config, view_config
@@ -298,7 +298,7 @@ def validate_form(request):
         "tests_repo": request.POST["tests-repo"],
     }
 
-    if len([v for v in data.values() if len(v) == 0]) > 0:
+    if len([v for v in list(data.values()) if len(v) == 0]) > 0:
         raise Exception("Missing required option")
 
     data["regression_test"] = request.POST["test_type"] == "Regression"
@@ -580,7 +580,7 @@ def format_results(run_results, run):
         sprt = run["args"]["sprt"]
         state = sprt.get("state", "")
 
-        stats = stat_util.SPRT(
+        stats = fishtest.stat_util.SPRT(
             run_results,
             elo0=sprt["elo0"],
             alpha=sprt["alpha"],
@@ -600,7 +600,7 @@ def format_results(run_results, run):
             )
         )
     else:
-        elo, elo95, los = stat_util.get_elo(WLD)
+        elo, elo95, los = fishtest.stat_util.get_elo(WLD)
 
         # Display the results
         eloInfo = "ELO: %.2f +-%.1f (95%%)" % (elo, elo95)
@@ -681,7 +681,7 @@ def get_chi2(tasks, bad_users):
     if len(users) == 0:
         return results
 
-    observed = numpy.array(users.values())
+    observed = numpy.array(list(users.values()))
     rows, columns = observed.shape
     df = (rows - 1) * (columns - 1)
     column_sums = numpy.sum(observed, axis=0)
@@ -695,7 +695,7 @@ def get_chi2(tasks, bad_users):
     adj = numpy.outer((1 - row_sums / grand_total), (1 - column_sums / grand_total))
     residual = diff / numpy.sqrt(expected * adj)
     for idx in range(len(users)):
-        users[users.keys()[idx]] = numpy.max(numpy.abs(residual[idx]))
+        users[list(users.keys())[idx]] = numpy.max(numpy.abs(residual[idx]))
     chi2 = numpy.sum(diff * diff / expected)
     return {
         "chi2": chi2,

@@ -17,7 +17,7 @@ def scavenge_tasks(scavenge=True, minutes=60):
             if task["active"] and task["last_updated"] < datetime.utcnow() - timedelta(
                 minutes=minutes
             ):
-                print "Scavenging", task
+                print("Scavenging", task)
                 task["active"] = False
                 changed = True
         if changed and scavenge:

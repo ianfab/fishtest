@@ -5,13 +5,13 @@ import random
 import time
 from datetime import datetime
 
-import stat_util
-from actiondb import ActionDb
+import fishtest.stat_util
+from fishtest.actiondb import ActionDb
 from bson.objectid import ObjectId
 from pymongo import ASCENDING, DESCENDING, MongoClient
-from regressiondb import RegressionDb
-from userdb import UserDb
-from views import parse_tc
+from fishtest.regressiondb import RegressionDb
+from fishtest.userdb import UserDb
+from fishtest.views import parse_tc
 
 
 class RunDb:
@@ -358,7 +358,7 @@ class RunDb:
         # Check if SPRT stopping is enabled
         if "sprt" in run["args"]:
             sprt = run["args"]["sprt"]
-            sprt_stats = stat_util.SPRT(
+            sprt_stats = fishtest.stat_util.SPRT(
                 self.get_results(run),
                 elo0=sprt["elo0"],
                 alpha=sprt["alpha"],
