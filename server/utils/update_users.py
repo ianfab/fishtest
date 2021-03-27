@@ -4,7 +4,7 @@ import os
 import sys
 
 # For tasks
-sys.path.append(os.path.expanduser("~/fishtest/fishtest"))
+sys.path.append(os.path.expanduser("~/fishtest/server"))
 from fishtest.rundb import RunDb
 from fishtest.views import delta_date, parse_tc
 

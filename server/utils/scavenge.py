@@ -4,7 +4,7 @@ import sys
 from datetime import datetime, timedelta
 
 # For tasks
-sys.path.append(os.path.expanduser("~/fishtest/fishtest"))
+sys.path.append(os.path.expanduser("~/fishtest/server"))
 from fishtest.rundb import RunDb
 
 
