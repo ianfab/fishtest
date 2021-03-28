@@ -6,12 +6,12 @@ import time
 from datetime import datetime
 
 import fishtest.stat_util
-from fishtest.actiondb import ActionDb
 from bson.objectid import ObjectId
-from pymongo import ASCENDING, DESCENDING, MongoClient
+from fishtest.actiondb import ActionDb
 from fishtest.regressiondb import RegressionDb
 from fishtest.userdb import UserDb
 from fishtest.views import parse_tc
+from pymongo import ASCENDING, DESCENDING, MongoClient
 
 
 class RunDb:

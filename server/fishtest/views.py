@@ -7,11 +7,11 @@ import sys
 from collections import defaultdict
 from email.mime.text import MIMEText
 
+import fishtest.stat_util
 import numpy
 import requests
 import scipy
 import scipy.stats
-import fishtest.stat_util
 from pyramid.httpexceptions import HTTPBadRequest, HTTPFound
 from pyramid.security import authenticated_userid, forget, has_permission, remember
 from pyramid.view import forbidden_view_config, view_config

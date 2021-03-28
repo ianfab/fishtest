@@ -1,10 +1,7 @@
-#!/usr/bin/python
-import os
-import sys
+#!/usr/bin/env python
+
 from datetime import datetime, timedelta
 
-# For tasks
-sys.path.append(os.path.expanduser("~/fishtest/server"))
 from fishtest.rundb import RunDb
 
 
