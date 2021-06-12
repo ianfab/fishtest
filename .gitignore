@@ -1,5 +1,7 @@
 *.pyc
 .*
 *~
-fishtest/build
-fishtest/fishtest.egg-info
+*/env
+server/fishtest.egg-info
+worker/fishtest.cfg
+worker/testing

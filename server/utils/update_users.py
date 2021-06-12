@@ -1,10 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 import datetime
-import os
-import sys
 
-# For tasks
-sys.path.append(os.path.expanduser("~/fishtest/fishtest"))
 from fishtest.rundb import RunDb
 from fishtest.views import delta_date, parse_tc
 
@@ -21,7 +17,7 @@ def process_run(run, info):
         if "worker_info" not in task:
             continue
         username = task["worker_info"].get("username", None)
-        if username == None:
+        if username is None:
             continue
 
         if "stats" in task:
@@ -58,7 +54,7 @@ def build_users(machines, info):
         try:
             user["last_updated"] = delta_date(user["last_updated"])
         except:
-            pass
+            print("Exception on 'last_updated'")
         users.append(user)
 
     users = [u for u in users if u["games"] > 0 or u["tests"] > 0]
@@ -110,7 +106,7 @@ def update_users():
     rundb.userdb.top_month.remove()
     rundb.userdb.top_month.insert(build_users(machines, top_month))
 
-    print("Successfully updated %d users" % (len(users)))
+    print("Successfully updated {} users".format(len(users)))
 
 
 def main():

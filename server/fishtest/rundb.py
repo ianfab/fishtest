@@ -5,13 +5,13 @@ import random
 import time
 from datetime import datetime
 
-import stat_util
-from actiondb import ActionDb
+import fishtest.stat_util
 from bson.objectid import ObjectId
+from fishtest.actiondb import ActionDb
+from fishtest.regressiondb import RegressionDb
+from fishtest.userdb import UserDb
+from fishtest.views import parse_tc
 from pymongo import ASCENDING, DESCENDING, MongoClient
-from regressiondb import RegressionDb
-from userdb import UserDb
-from views import parse_tc
 
 
 class RunDb:
@@ -151,9 +151,6 @@ class RunDb:
                     machine["last_updated"] = task.get("last_updated", None)
                     machine["run"] = run
                     machine["nps"] = task.get("nps", 0)
-                    # TODO(glinscott): Temporary - remove once worker version >= 41
-                    if not isinstance(machine["uname"], basestring):
-                        machine["uname"] = machine["uname"][0] + machine["uname"][2]
                     machines.append(machine)
         return machines
 
@@ -361,7 +358,7 @@ class RunDb:
         # Check if SPRT stopping is enabled
         if "sprt" in run["args"]:
             sprt = run["args"]["sprt"]
-            sprt_stats = stat_util.SPRT(
+            sprt_stats = fishtest.stat_util.SPRT(
                 self.get_results(run),
                 elo0=sprt["elo0"],
                 alpha=sprt["alpha"],

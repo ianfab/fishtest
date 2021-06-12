@@ -57,6 +57,9 @@ class UserDb:
         except:
             return False
 
+    def save_user(self, user):
+        self.users.replace_one({"username": user["username"]}, user)
+
     def get_machine_limit(self, username):
         user = self.users.find_one({"username": username})
         if user and "machine_limit" in user:

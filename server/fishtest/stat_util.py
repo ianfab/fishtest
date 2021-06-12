@@ -147,8 +147,8 @@ def SPRT(R, elo0, alpha, elo1, beta, drawelo):
 
 if __name__ == "__main__":
     # unit tests
-    print SPRT({"wins": 10, "losses": 0, "draws": 20}, 0, 0.05, 5, 0.05, 200)
-    print SPRT({"wins": 10, "losses": 1, "draws": 20}, 0, 0.05, 5, 0.05, 200)
-    print SPRT({"wins": 5019, "losses": 5026, "draws": 15699}, 0, 0.05, 5, 0.05, 200)
-    print SPRT({"wins": 1450, "losses": 1500, "draws": 4000}, 0, 0.05, 6, 0.05, 200)
-    print SPRT({"wins": 716, "losses": 591, "draws": 2163}, 0, 0.05, 6, 0.05, 200)
+    print(SPRT({"wins": 10, "losses": 0, "draws": 20}, 0, 0.05, 5, 0.05, 200))
+    print(SPRT({"wins": 10, "losses": 1, "draws": 20}, 0, 0.05, 5, 0.05, 200))
+    print(SPRT({"wins": 5019, "losses": 5026, "draws": 15699}, 0, 0.05, 5, 0.05, 200))
+    print(SPRT({"wins": 1450, "losses": 1500, "draws": 4000}, 0, 0.05, 6, 0.05, 200))
+    print(SPRT({"wins": 716, "losses": 591, "draws": 2163}, 0, 0.05, 6, 0.05, 200))

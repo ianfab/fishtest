@@ -6,13 +6,14 @@ README = ""
 CHANGES = ""
 
 requires = [
-    "pyramid",
+    "pyramid<2",
     "pyramid_debugtoolbar",
     "pyramid_mako",
     "waitress",
-    "psutil",
     "pymongo",
-    "pyzmq",
+    "numpy",
+    "scipy",
+    "requests",
 ]
 
 setup(

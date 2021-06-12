@@ -1,10 +1,7 @@
-#!/usr/bin/python
-import os
-import sys
+#!/usr/bin/env python
+
 from datetime import datetime, timedelta
 
-# For tasks
-sys.path.append(os.path.expanduser("~/fishtest/fishtest"))
 from fishtest.rundb import RunDb
 
 
@@ -17,7 +14,7 @@ def scavenge_tasks(scavenge=True, minutes=60):
             if task["active"] and task["last_updated"] < datetime.utcnow() - timedelta(
                 minutes=minutes
             ):
-                print "Scavenging", task
+                print("Scavenging", task)
                 task["active"] = False
                 changed = True
         if changed and scavenge:
