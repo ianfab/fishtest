@@ -28,7 +28,7 @@ except ImportError:
 WORKER_VERSION = 72
 ALIVE = True
 
-HTTP_TIMEOUT = 5.0
+HTTP_TIMEOUT = 30.0
 
 
 def setup_config_file(config_file):
