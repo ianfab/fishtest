@@ -2,7 +2,7 @@
 
 Variant Fishtest, is a distributed task queue to test new ideas and improvements for chess variant engines through self playing. The main instance for [Multi-Variant Stockfish](https://github.com/ddugovic/Stockfish) and [Fairy-Stockfish](https://github.com/ianfab/Fairy-Stockfish) is:
 
-http://variantfishtest.org/tests
+http://variantfishtest.org/tests (currently offline)
 
 Developers submit patches with new ideas and improvements for the engine, and CPU contributors install a fishtest worker on their computers to let the engine play games in the background in order to help developers test their patches.
 
